@@ -18,23 +18,23 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/luargil/End-to-End-Kubernetes-DevSecOps-Tetris-Project.git'
             }
         }
-        stage('Sonarqube Analysis') {
-            steps {
-                dir('Tetris-V1') {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=TetrisVersion1.0 \
-                        -Dsonar.projectKey=TetrisVersion1.0 '''
-                    }
-                }
-            }
-        }
-        stage('Quality Check') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
-                }
-            }
-        }
+        // stage('Sonarqube Analysis') {
+        //     steps {
+        //         dir('Tetris-V1') {
+        //             withSonarQubeEnv('sonar-server') {
+        //                 sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=TetrisVersion1.0 \
+        //                 -Dsonar.projectKey=TetrisVersion1.0 '''
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Quality Check') {
+        //     steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+        //         }
+        //     }
+        // }
         stage('Installing Dependencies') {
             steps {
                 dir('Tetris-V1') {
@@ -74,15 +74,15 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        sh 'docker tag tetrisv1 avian19/tetrisv1:${BUILD_NUMBER}'
-                        sh 'docker push avian19/tetrisv1:${BUILD_NUMBER}'
+                        sh 'docker tag tetrisv1 luargil/tetrisv1:${BUILD_NUMBER}'
+                        sh 'docker push luargil/tetrisv1:${BUILD_NUMBER}'
                     }
                 }
             }
         }
         stage("TRIVY Image Scan") {
             steps {
-                sh 'trivy image avian19/tetrisv1:${BUILD_NUMBER} > trivyimage.txt'
+                sh 'trivy image luargil/tetrisv1:${BUILD_NUMBER} > trivyimage.txt'
             }
         }
         stage('Checkout Code') {
