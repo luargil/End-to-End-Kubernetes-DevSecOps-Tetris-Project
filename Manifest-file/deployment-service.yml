@@ -16,7 +16,7 @@ spec:
       containers:
       - name: tetris
         image: luargil/tetrisv1:7
-        ports:
+ports:
         - containerPort: 3000
 ---
 apiVersion: v1
